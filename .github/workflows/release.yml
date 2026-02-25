@@ -1,0 +1,73 @@
+name: Build and publish xk6-file
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  K6_VERSION: v1.6.1
+  XK6_VERSION: latest
+
+jobs:
+  build:
+    name: Build xk6-file
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Go
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Build k6 with xk6-file
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        env:
+          CGO_ENABLED: 0
+        run: |
+          mkdir dist
+          go install go.k6.io/xk6/cmd/xk6@latest
+          echo "------------------------- Linux amd64 -------------------------"
+          GOOS=linux GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_linux_amd64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_linux_amd64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_linux_amd64
+          echo "------------------------- Linux arm64 -------------------------"
+          GOOS=linux GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_linux_arm64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_linux_arm64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_linux_arm64
+          echo "------------------------- macOS amd64 -------------------------"
+          GOOS=darwin GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_darwin_amd64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_darwin_amd64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_darwin_amd64
+          echo "------------------------- macOS arm64 -------------------------"
+          GOOS=darwin GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_darwin_arm64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_darwin_arm64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_darwin_arm64
+          echo "------------------------- Windows amd64 -------------------------"
+          GOOS=windows GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_windows_amd64.exe --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_windows_amd64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_windows_amd64.exe
+          echo "------------------------- Windows arm64 -------------------------"
+          GOOS=windows GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_windows_arm64.exe --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_windows_arm64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_windows_arm64.exe
+
+      - name: Generate CycloneDX SBOM artifacts
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        run: |
+          go install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@latest
+          cyclonedx-gomod mod -json -licenses -output code-cyclonedx-xk6-file-${GITHUB_REF_NAME}.json
+
+      - name: Upload to GitHub Release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tar.gz
+            code-cyclonedx-xk6-file-${{ github.ref_name }}.json
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
