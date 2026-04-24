@@ -1,4 +1,4 @@
-module github.com/avitalique/xk6-file
+module github.com/Mistyrain520/xk6-file
 
 go 1.25.0
 
