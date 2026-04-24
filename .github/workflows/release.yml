@@ -37,22 +37,22 @@ jobs:
           mkdir dist
           go install go.k6.io/xk6/cmd/xk6@latest
           echo "------------------------- Linux amd64 -------------------------"
-          GOOS=linux GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_linux_amd64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          GOOS=linux GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_linux_amd64 --with github.com/Mistyrain520/xk6-file@${GITHUB_REF_NAME}=.
           tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_linux_amd64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_linux_amd64
           echo "------------------------- Linux arm64 -------------------------"
-          GOOS=linux GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_linux_arm64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          GOOS=linux GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_linux_arm64 --with github.com/Mistyrain520/xk6-file@${GITHUB_REF_NAME}=.
           tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_linux_arm64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_linux_arm64
           echo "------------------------- macOS amd64 -------------------------"
-          GOOS=darwin GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_darwin_amd64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          GOOS=darwin GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_darwin_amd64 --with github.com/Mistyrain520/xk6-file@${GITHUB_REF_NAME}=.
           tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_darwin_amd64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_darwin_amd64
           echo "------------------------- macOS arm64 -------------------------"
-          GOOS=darwin GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_darwin_arm64 --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          GOOS=darwin GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_darwin_arm64 --with github.com/Mistyrain520/xk6-file@${GITHUB_REF_NAME}=.
           tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_darwin_arm64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_darwin_arm64
           echo "------------------------- Windows amd64 -------------------------"
-          GOOS=windows GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_windows_amd64.exe --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          GOOS=windows GOARCH=amd64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_windows_amd64.exe --with github.com/Mistyrain520/xk6-file@${GITHUB_REF_NAME}=.
           tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_windows_amd64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_windows_amd64.exe
           echo "------------------------- Windows arm64 -------------------------"
-          GOOS=windows GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_windows_arm64.exe --with github.com/avitalique/xk6-file@${GITHUB_REF_NAME}=.
+          GOOS=windows GOARCH=arm64 xk6 build --output dist/xk6-file_${GITHUB_REF_NAME}_windows_arm64.exe --with github.com/Mistyrain520/xk6-file@${GITHUB_REF_NAME}=.
           tar cvzf dist/xk6-file_${GITHUB_REF_NAME}_windows_arm64.tar.gz dist/xk6-file_${GITHUB_REF_NAME}_windows_arm64.exe
 
       - name: Generate CycloneDX SBOM artifacts
