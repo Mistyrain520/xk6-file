@@ -1,4 +1,4 @@
-module github.com/Mistyrain520/xk6-file
+module github.com/Mistyrain520/xk6-file/v2
 
 go 1.25.0
 
